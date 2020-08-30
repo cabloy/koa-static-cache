@@ -63,7 +63,7 @@ module.exports = function staticCache(dir, options, files) {
       // by zhennann
       var fullpath;
       if(options.getFullPath) {
-        fullpath = options.getFullPath(dir, filename, options)
+        fullpath = options.getFullPath(ctx, dir, filename, options)
         if(!fullpath) {
           return await next()
         }
