@@ -37,8 +37,6 @@ module.exports = function staticCache(dir, options, files) {
   return async (ctx, next) => {
     // only accept HEAD and GET
     if (ctx.method !== 'HEAD' && ctx.method !== 'GET') return await next()
-    // check prefix first to avoid calculate
-    if (ctx.path.indexOf(options.prefix) !== 0) return await next()
 
     // decode for `/%E4%B8%AD%E6%96%87`
     // normalize for `//index`
@@ -46,6 +44,9 @@ module.exports = function staticCache(dir, options, files) {
 
     // check alias
     if (options.alias && options.alias[filename]) filename = options.alias[filename];
+
+    // check prefix first to avoid calculate
+    if (filename.indexOf(options.prefix) !== 0) return await next()
 
     var file = files.get(filename)
     // try to load file
