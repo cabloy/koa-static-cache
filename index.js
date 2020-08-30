@@ -60,10 +60,19 @@ module.exports = function staticCache(dir, options, files) {
         filename = filename.slice(filePrefix.length)
       }
 
-      var fullpath = path.join(dir, filename)
-      // files that can be accessd should be under options.dir
-      if (fullpath.indexOf(dir) !== 0) {
-        return await next()
+      // by zhennann
+      var fullpath;
+      if(options.getFullPath) {
+        fullpath = options.getFullPath(dir, filename, options)
+        if(!fullpath) {
+          return await next()
+        }
+      } else {
+        fullpath = path.join(dir, filename)
+        // files that can be accessd should be under options.dir
+        if (fullpath.indexOf(dir) !== 0) {
+          return await next()
+        }
       }
 
       var s
@@ -74,7 +83,7 @@ module.exports = function staticCache(dir, options, files) {
       }
       if (!s.isFile()) return await next()
 
-      file = loadFile(filename, dir, options, files)
+      file = loadFile(filename, dir, options, files, fullpath)
     }
 
     ctx.status = 200
@@ -176,11 +185,11 @@ function safeDecodeURIComponent(text) {
  * @api private
  */
 
-function loadFile(name, dir, options, files) {
+function loadFile(name, dir, options, files, fullpath) {
   var pathname = path.normalize(path.join(options.prefix, name))
   if (!files.get(pathname)) files.set(pathname, {})
   var obj = files.get(pathname)
-  var filename = obj.path = path.join(dir, name)
+  var filename = obj.path = fullpath // path.join(dir, name)
   var stats = fs.statSync(filename)
   var buffer = fs.readFileSync(filename)
 

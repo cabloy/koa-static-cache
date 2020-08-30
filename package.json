@@ -1,15 +1,14 @@
 {
-  "name": "koa-static-cache",
+  "name": "@zhennann/koa-static-cache",
   "description": "Static cache for koa",
-  "version": "5.1.4",
+  "version": "5.1.5",
   "author": {
     "name": "Jonathan Ong",
     "email": "me@jongleberry.com",
     "url": "http://jongleberry.com",
     "twitter": "https://twitter.com/jongleberry"
   },
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Jeremiah Senkpiel",
       "email": "fishrock123@rocketmail.com",
       "url": "https://searchbeam.jit.su",
