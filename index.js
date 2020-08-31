@@ -40,13 +40,17 @@ module.exports = function staticCache(dir, options, files) {
 
     // decode for `/%E4%B8%AD%E6%96%87`
     // normalize for `//index`
-    var filename = path.normalize(safeDecodeURIComponent(ctx.path))
+    var filenameRaw = safeDecodeURIComponent(ctx.path)
+    var filename = path.normalize(filenameRaw)
 
     // check alias
-    if (options.alias && options.alias[filename]) filename = options.alias[filename];
+    if (options.alias && options.alias[filenameRaw]) {
+      filenameRaw = options.alias[filenameRaw]
+      filename = path.normalize(filenameRaw)
+    }
 
     // check prefix first to avoid calculate
-    if (filename.indexOf(options.prefix) !== 0) return await next()
+    if (filenameRaw.indexOf(options.prefix) !== 0) return await next()
 
     var file = files.get(filename)
     // try to load file
